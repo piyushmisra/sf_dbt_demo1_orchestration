@@ -5,7 +5,7 @@ CREATE SCHEMA IF NOT EXISTS DBT_WORKSPACES.ORCHESTRATION;
 -- This triggers the graph. Pros use a dedicated warehouse for orchestration.
 CREATE OR REPLACE TASK DBT_WORKSPACES.ORCHESTRATION.DAILY_PIPELINE_ROOT
     WAREHOUSE = 'COMPUTE_WH'
-    SCHEDULE = 'USING CRON 0 1 * * * Australia/Sydney' -- 1 AM local time
+    SCHEDULE = 'USING CRON 0 1 * * *' -- 1 AM local time
     COMMENT = 'Enterprise Root Task: Triggers Nightly dbt Build'
 AS
     SELECT CURRENT_TIMESTAMP(); -- Root tasks can be simple dummy actions
@@ -35,7 +35,7 @@ CREATE OR REPLACE TASK DBT_WORKSPACES.ORCHESTRATION.NOTIFY_COMPLETION
 AS
     CALL SYSTEM$SEND_EMAIL(
         'DBT_MONITORING_INTEGRATION',
-        'data-ops@yourcompany.com',
+        'piyush.misra@ecan.govt.nz',
         'DBT Run Success',
         'The nightly dbt build completed successfully at ' || CURRENT_TIMESTAMP()
     );
@@ -46,4 +46,4 @@ ALTER TASK DBT_WORKSPACES.ORCHESTRATION.RUN_DBT_MODELS RESUME;
 ALTER TASK DBT_WORKSPACES.ORCHESTRATION.SYNC_GIT_RESOURCES RESUME;
 ALTER TASK DBT_WORKSPACES.ORCHESTRATION.DAILY_PIPELINE_ROOT RESUME;
 
--- To do: set up notification Integration
+-- To do: set up notification Integration????
