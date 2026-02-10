@@ -3,7 +3,6 @@ name: Deploy Orchestration
 on:
   push:
     branches: [ main ]
-    paths: [ 'scripts/**' ]
   workflow_dispatch:
 
 jobs:
