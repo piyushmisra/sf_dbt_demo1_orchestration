@@ -5,7 +5,7 @@ CREATE SCHEMA IF NOT EXISTS DBT_WORKSPACES.ORCHESTRATION;
 -- This triggers the graph. Pros use a dedicated warehouse for orchestration.
 CREATE OR REPLACE TASK DBT_WORKSPACES.ORCHESTRATION.DAILY_PIPELINE_ROOT
     WAREHOUSE = 'COMPUTE_WH'
-    SCHEDULE = 'USING CRON 0 1 * * *' -- 1 AM local time
+    SCHEDULE = 'USING CRON 0 1 * * * Pacific/Auckland'
     COMMENT = 'Enterprise Root Task: Triggers Nightly dbt Build'
 AS
     SELECT CURRENT_TIMESTAMP(); -- Root tasks can be simple dummy actions
