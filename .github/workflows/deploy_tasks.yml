@@ -1,0 +1,22 @@
+name: Deploy Orchestration
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'scripts/**' ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Execute Snowflake SQL
+        uses: snowflake-labs/snowflake-action@v1
+        with:
+          account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          username: ${{ secrets.SNOWFLAKE_USER }}
+          password: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          role: ACCOUNTADMIN
+          warehouse: COMPUTE_WH
+          script-path: scripts/setup_orchestration.sql
