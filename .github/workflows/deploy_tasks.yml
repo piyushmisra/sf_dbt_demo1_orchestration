@@ -15,19 +15,20 @@ jobs:
       - name: Install Snowflake CLI
         uses: Snowflake-Labs/snowflake-cli-action@main
         with:
-          cli-version: ""
-          default-config-file: "config.toml" # Optional, we will use env vars
+          cli-version: "latest"
 
       - name: Execute Orchestration Script
         env:
-          # This is the "magic" variable that enables env var connections
+          # REQUIRED: Tells CLI to look at environment variables
           SNOWFLAKE_CLI_FEATURES_USE_ENV_VARS_FOR_CONNECTION: "true"
           
-          SNOWFLAKE_CONNECTIONS_DEFAULT_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SNOWFLAKE_CONNECTIONS_DEFAULT_USER: ${{ secrets.SNOWFLAKE_USER }}
-          SNOWFLAKE_CONNECTIONS_DEFAULT_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-          SNOWFLAKE_CONNECTIONS_DEFAULT_ROLE: "ACCOUNTADMIN"
-          SNOWFLAKE_CONNECTIONS_DEFAULT_WAREHOUSE: "COMPUTE_WH"
+          # Connection Details (Mapped from your Secrets)
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_ROLE: "ACCOUNTADMIN"
+          SNOWFLAKE_WAREHOUSE: "COMPUTE_WH"
         run: |
-          # Use --connection default to force it to look at the env vars above
-          snow sql -f scripts/setup_orchestration.sql --connection default
+          # The '-x' flag is the secret sauce: it creates a temporary connection 
+          # using only the SNOWFLAKE_... env variables defined above.
+          snow sql -f scripts/setup_orchestration.sql -x
