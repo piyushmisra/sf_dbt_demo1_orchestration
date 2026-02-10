@@ -15,7 +15,7 @@ jobs:
       - name: Install Snowflake CLI
         uses: Snowflake-Labs/snowflake-cli-action@main
         with:
-          cli-version: "latest"
+          cli-version: ""
           default-config-file: "config.toml" # Optional, we will use env vars
 
       - name: Execute Orchestration Script
