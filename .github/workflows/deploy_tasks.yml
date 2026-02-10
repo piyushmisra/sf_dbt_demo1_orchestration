@@ -20,6 +20,9 @@ jobs:
 
       - name: Execute Orchestration Script
         env:
+          # This is the "magic" variable that enables env var connections
+          SNOWFLAKE_CLI_FEATURES_USE_ENV_VARS_FOR_CONNECTION: "true"
+          
           SNOWFLAKE_CONNECTIONS_DEFAULT_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_CONNECTIONS_DEFAULT_USER: ${{ secrets.SNOWFLAKE_USER }}
           SNOWFLAKE_CONNECTIONS_DEFAULT_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
