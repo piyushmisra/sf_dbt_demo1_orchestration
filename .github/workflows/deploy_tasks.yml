@@ -15,20 +15,21 @@ jobs:
       - name: Install Snowflake CLI
         uses: Snowflake-Labs/snowflake-cli-action@main
         with:
-          cli-version: "latest"
+          # Empty string tells the action to just get the current stable version
+          cli-version: ""
 
       - name: Execute Orchestration Script
         env:
-          # REQUIRED: Tells CLI to look at environment variables
+          # Enable the feature to read credentials from the environment
           SNOWFLAKE_CLI_FEATURES_USE_ENV_VARS_FOR_CONNECTION: "true"
           
-          # Connection Details (Mapped from your Secrets)
+          # Credentials - Ensure these match your GitHub Secret names exactly
           SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
           SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
           SNOWFLAKE_ROLE: "ACCOUNTADMIN"
           SNOWFLAKE_WAREHOUSE: "COMPUTE_WH"
         run: |
-          # The '-x' flag is the secret sauce: it creates a temporary connection 
-          # using only the SNOWFLAKE_... env variables defined above.
+          # The -x flag creates a temporary connection on the fly 
+          # using the SNOWFLAKE_... variables provided above.
           snow sql -f scripts/setup_orchestration.sql -x
